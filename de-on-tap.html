@@ -79,6 +79,22 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        .home-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background: #545b62;
+            transform: translateY(-1px);
+        }
+
         .exam-section {
             display: none;
             padding: 30px;
@@ -285,6 +301,9 @@
         <div class="header">
             <h1>📚 Đề Ôn Tập Toán Học Lớp 4</h1>
             <p>🎲 Đề thi ngẫu nhiên - Cộng, trừ, nhân, chia với 3 cấp độ khó</p>
+            <div style="margin-top: 15px;">
+                <button class="home-btn" onclick="goHome()">🏠 Về trang chủ</button>
+            </div>
         </div>
 
         <div class="nav-buttons" id="nav-section">
@@ -776,6 +795,10 @@
             
             // Reset user answers
             userAnswers = {};
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
         }
     </script>
 </body>

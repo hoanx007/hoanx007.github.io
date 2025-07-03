@@ -338,6 +338,22 @@
             background: #545b62;
         }
 
+        .home-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background: #545b62;
+            transform: translateY(-1px);
+        }
+
         .results-history {
             background: #f8f9fa;
             padding: 20px;
@@ -484,6 +500,9 @@
         <div class="header" id="main-header">
             <h1>📋 Đề Thi Tổng Hợp Toán Học Lớp 4</h1>
             <p>🎯 Kiểm tra toàn diện kiến thức toán học lớp 4</p>
+            <div style="margin-top: 15px;">
+                <button class="home-btn" onclick="goHome()">🏠 Về trang chủ</button>
+            </div>
             <div class="timer-display" id="timer-display">
                 ⏰ Thời gian: <span id="timer">00:00</span>
             </div>
@@ -548,6 +567,60 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
+        // Hàm tạo đáp án sai không trùng lặp - cải thiện
+        function generateUniqueWrongAnswers(correctAnswer, count = 3, range = { min: 100, max: 1000 }) {
+            const wrongAnswers = new Set();
+            const attempts = 200; // Tăng số lần thử
+            let currentAttempt = 0;
+            
+            // Đảm bảo correctAnswer là số
+            const correct = typeof correctAnswer === 'string' ? parseFloat(correctAnswer) : correctAnswer;
+            
+            // Tạo các đáp án sai với nhiều phương pháp khác nhau
+            const methods = [
+                () => correct + getRandomNumber(range.min, range.max),
+                () => Math.max(1, correct - getRandomNumber(range.min, range.max)),
+                () => Math.floor(correct * (1 + getRandomNumber(10, 50) / 100)),
+                () => Math.max(1, Math.floor(correct * (1 - getRandomNumber(10, 30) / 100))),
+                () => correct + getRandomNumber(-range.max, range.max),
+                () => Math.max(1, correct + getRandomNumber(-range.min, range.min)),
+                () => Math.floor(correct * 1.5),
+                () => Math.floor(correct * 0.7),
+                () => correct + 500,
+                () => Math.max(1, correct - 300)
+            ];
+            
+            while (wrongAnswers.size < count && currentAttempt < attempts) {
+                const method = methods[currentAttempt % methods.length];
+                const wrongAnswer = Math.floor(method());
+                
+                // Đảm bảo đáp án sai khác đáp án đúng và không trùng lặp
+                if (wrongAnswer !== correct && wrongAnswer > 0 && !wrongAnswers.has(wrongAnswer)) {
+                    wrongAnswers.add(wrongAnswer);
+                }
+                currentAttempt++;
+            }
+            
+            // Nếu vẫn không đủ, tạo đáp án cố định
+            const fallbackAnswers = [
+                Math.floor(correct * 2),
+                Math.floor(correct * 0.5),
+                correct + 1000,
+                Math.max(1, correct - 500),
+                correct + 123,
+                correct + 456
+            ];
+            
+            for (const fallback of fallbackAnswers) {
+                if (wrongAnswers.size >= count) break;
+                if (fallback !== correct && fallback > 0 && !wrongAnswers.has(fallback)) {
+                    wrongAnswers.add(fallback);
+                }
+            }
+            
+            return Array.from(wrongAnswers).slice(0, count);
+        }
+
         // Hàm trộn mảng
         function shuffleArray(array) {
             const newArray = [...array];
@@ -566,11 +639,7 @@
             const a1 = getRandomNumber(1234, 8999);
             const b1 = getRandomNumber(1234, 8999);
             const sum = a1 + b1;
-            const wrongAnswers1 = [
-                sum + getRandomNumber(100, 500),
-                sum - getRandomNumber(100, 500),
-                sum + getRandomNumber(1000, 2000)
-            ];
+            const wrongAnswers1 = generateUniqueWrongAnswers(sum, 3, { min: 100, max: 2000 });
             const choices1 = shuffleArray([sum, ...wrongAnswers1]);
             questions.push({
                 q: `Tính: ${a1.toLocaleString()} + ${b1.toLocaleString()} = ?`,
@@ -582,11 +651,7 @@
             const a2 = getRandomNumber(6000, 9999);
             const b2 = getRandomNumber(1000, 5999); // Đảm bảo a2 > b2
             const diff = a2 - b2;
-            const wrongAnswers2 = [
-                diff + getRandomNumber(200, 800),
-                Math.max(100, diff - getRandomNumber(200, 800)), // Đảm bảo không âm
-                diff + getRandomNumber(1000, 1500)
-            ];
+            const wrongAnswers2 = generateUniqueWrongAnswers(diff, 3, { min: 200, max: 1500 });
             const choices2 = shuffleArray([diff, ...wrongAnswers2]);
             questions.push({
                 q: `Tính: ${a2.toLocaleString()} - ${b2.toLocaleString()} = ?`,
@@ -598,11 +663,7 @@
             const a3 = getRandomNumber(123, 999);
             const b3 = getRandomNumber(2, 12);
             const product = a3 * b3;
-            const wrongAnswers3 = [
-                product + getRandomNumber(100, 500),
-                Math.max(100, product - getRandomNumber(100, 500)), // Đảm bảo dương
-                product + getRandomNumber(1000, 2000)
-            ];
+            const wrongAnswers3 = generateUniqueWrongAnswers(product, 3, { min: 100, max: 2000 });
             const choices3 = shuffleArray([product, ...wrongAnswers3]);
             questions.push({
                 q: `Tính: ${a3} × ${b3} = ?`,
@@ -614,11 +675,7 @@
             const divisor = getRandomNumber(12, 25);
             const quotient = getRandomNumber(45, 150);
             const dividend = divisor * quotient; // Đảm bảo chia hết
-            const wrongAnswers4 = [
-                quotient + getRandomNumber(10, 30),
-                Math.max(1, quotient - getRandomNumber(10, 30)), // Đảm bảo dương
-                quotient + getRandomNumber(50, 100)
-            ];
+            const wrongAnswers4 = generateUniqueWrongAnswers(quotient, 3, { min: 10, max: 100 });
             const choices4 = shuffleArray([quotient, ...wrongAnswers4]);
             questions.push({
                 q: `Tính: ${dividend} ÷ ${divisor} = ?`,
@@ -628,8 +685,9 @@
 
             // Câu 5: So sánh số
             const numbers = [];
+            const baseNumber = getRandomNumber(8000, 9000);
             for (let i = 0; i < 4; i++) {
-                numbers.push(getRandomNumber(8000, 9999));
+                numbers.push(baseNumber + getRandomNumber(i * 100, (i + 1) * 100));
             }
             const maxNumber = Math.max(...numbers);
             const shuffledNumbers = shuffleArray(numbers);
@@ -651,63 +709,174 @@
             const dm = getRandomNumber(1, 9);
             const cm = getRandomNumber(10, 99);
             const totalCm = m * 100 + dm * 10 + cm;
-            const wrongAnswers1 = [
-                `${m}${dm}${cm} cm`,
-                `${m + dm + cm} cm`,
-                `${totalCm + 100} cm`
-            ];
-            const choices1 = shuffleArray([`${totalCm} cm`, ...wrongAnswers1]);
+            
+            // Tạo đáp án sai đảm bảo không trùng lặp
+            const wrongAnswers1 = [];
+            
+            // Đáp án sai 1: Nối số
+            const concatenated1 = parseInt(`${m}${dm}${cm}`);
+            wrongAnswers1.push(`${concatenated1} cm`);
+            
+            // Đáp án sai 2: Cộng đơn giản
+            wrongAnswers1.push(`${m + dm + cm} cm`);
+            
+            // Đáp án sai 3: Tạo số khác biệt
+            let wrongAnswer1_3;
+            do {
+                wrongAnswer1_3 = totalCm + getRandomNumber(50, 200);
+            } while (wrongAnswer1_3 === totalCm || wrongAnswer1_3 === concatenated1 || wrongAnswer1_3 === (m + dm + cm));
+            
+            wrongAnswers1.push(`${wrongAnswer1_3} cm`);
+            
+            const allChoices1 = [`${totalCm} cm`, ...wrongAnswers1];
+            const choices1 = shuffleArray(allChoices1);
+            const correctIndex1 = choices1.indexOf(`${totalCm} cm`);
+            
             questions.push({
                 q: `${m} mét ${dm} đềximét ${cm} centimét bằng bao nhiêu centimét?`,
                 choices: choices1,
-                correct: choices1.indexOf(`${totalCm} cm`)
+                correct: correctIndex1
             });
 
             // Câu 2: Chu vi hình chữ nhật
             const length = getRandomNumber(8, 20);
             const width = getRandomNumber(5, 15);
             const perimeter = 2 * (length + width);
-            const wrongAnswers2 = [
-                `${length + width} m`,
-                `${length * width} m`,
-                `${perimeter + 4} m`
-            ];
-            const choices2 = shuffleArray([`${perimeter} m`, ...wrongAnswers2]);
+            
+            const wrongAnswers2 = [];
+            
+            // Đáp án sai 1: Chỉ cộng
+            wrongAnswers2.push(`${length + width} m`);
+            
+            // Đáp án sai 2: Diện tích
+            wrongAnswers2.push(`${length * width} m`);
+            
+            // Đáp án sai 3: Tạo số khác biệt
+            let wrongAnswer2_3;
+            do {
+                wrongAnswer2_3 = perimeter + getRandomNumber(2, 8);
+            } while (wrongAnswer2_3 === perimeter || wrongAnswer2_3 === (length + width) || wrongAnswer2_3 === (length * width));
+            
+            wrongAnswers2.push(`${wrongAnswer2_3} m`);
+            
+            const allChoices2 = [`${perimeter} m`, ...wrongAnswers2];
+            const choices2 = shuffleArray(allChoices2);
+            const correctIndex2 = choices2.indexOf(`${perimeter} m`);
+            
             questions.push({
                 q: `Chu vi hình chữ nhật có chiều dài ${length}m, chiều rộng ${width}m là:`,
                 choices: choices2,
-                correct: choices2.indexOf(`${perimeter} m`)
+                correct: correctIndex2
             });
 
             // Câu 3: Chuyển đổi khối lượng
             const kg = getRandomNumber(2, 8);
-            const g = getRandomNumber(100, 900); // Đảm bảo là số tròn trăm
+            const g = getRandomNumber(100, 900);
             const totalG = kg * 1000 + g;
-            const wrongAnswers3 = [
-                `${kg}${g} g`,
-                `${kg + g} g`,
-                `${totalG - 500} g`
-            ];
-            const choices3 = shuffleArray([`${totalG} g`, ...wrongAnswers3]);
+            
+            // Tạo đáp án sai đảm bảo không trùng lặp
+            const wrongAnswers3 = [];
+            const usedAnswers3 = new Set([totalG]);
+            
+            // Đáp án sai 1: Nối số
+            const concatenated = parseInt(`${kg}${g}`);
+            if (!usedAnswers3.has(concatenated)) {
+                wrongAnswers3.push(`${concatenated} g`);
+                usedAnswers3.add(concatenated);
+            }
+            
+            // Đáp án sai 2: Cộng đơn giản
+            const simpleSum = kg + g;
+            if (!usedAnswers3.has(simpleSum)) {
+                wrongAnswers3.push(`${simpleSum} g`);
+                usedAnswers3.add(simpleSum);
+            }
+            
+            // Đáp án sai 3: Tạo số khác biệt
+            let attempts3 = 0;
+            while (wrongAnswers3.length < 3 && attempts3 < 50) {
+                let candidate;
+                const method = attempts3 % 4;
+                
+                switch(method) {
+                    case 0:
+                        candidate = totalG + getRandomNumber(100, 500);
+                        break;
+                    case 1:
+                        candidate = Math.max(100, totalG - getRandomNumber(100, 500));
+                        break;
+                    case 2:
+                        candidate = Math.floor(totalG * 1.2);
+                        break;
+                    case 3:
+                        candidate = Math.floor(totalG * 0.8);
+                        break;
+                }
+                
+                if (!usedAnswers3.has(candidate) && candidate > 0) {
+                    wrongAnswers3.push(`${candidate} g`);
+                    usedAnswers3.add(candidate);
+                }
+                attempts3++;
+            }
+            
+            // Fallback nếu không đủ đáp án
+            const fallbacks3 = [totalG + 1000, totalG - 500, totalG * 2, Math.floor(totalG / 2)];
+            for (const fallback of fallbacks3) {
+                if (wrongAnswers3.length >= 3) break;
+                if (!usedAnswers3.has(fallback) && fallback > 0) {
+                    wrongAnswers3.push(`${fallback} g`);
+                    usedAnswers3.add(fallback);
+                }
+            }
+            
+            // Đảm bảo có đủ 3 đáp án sai
+            while (wrongAnswers3.length < 3) {
+                const random = totalG + getRandomNumber(1000, 2000);
+                if (!usedAnswers3.has(random)) {
+                    wrongAnswers3.push(`${random} g`);
+                    usedAnswers3.add(random);
+                }
+            }
+            
+            const allChoices3 = [`${totalG} g`, ...wrongAnswers3.slice(0, 3)];
+            const choices3 = shuffleArray(allChoices3);
+            const correctIndex3 = choices3.indexOf(`${totalG} g`);
+            
             questions.push({
                 q: `${kg} kg ${g} g bằng bao nhiêu gam?`,
                 choices: choices3,
-                correct: choices3.indexOf(`${totalG} g`)
+                correct: correctIndex3
             });
 
             // Câu 4: Diện tích hình vuông
             const side = getRandomNumber(6, 15);
             const area = side * side;
-            const wrongAnswers4 = [
-                `${side * 4} cm²`,
-                `${side * 2} cm²`,
-                `${area + 20} cm²`
-            ];
-            const choices4 = shuffleArray([`${area} cm²`, ...wrongAnswers4]);
+            
+            const wrongAnswers4 = [];
+            
+            // Đáp án sai 1: Chu vi
+            wrongAnswers4.push(`${side * 4} cm²`);
+            
+            // Đáp án sai 2: Nhân 2
+            wrongAnswers4.push(`${side * 2} cm²`);
+            
+            // Đáp án sai 3: Tạo số khác biệt
+            let wrongAnswer4_3;
+            do {
+                wrongAnswer4_3 = area + getRandomNumber(10, 50);
+            } while (wrongAnswer4_3 === area || wrongAnswer4_3 === (side * 4) || wrongAnswer4_3 === (side * 2));
+            
+            wrongAnswers4.push(`${wrongAnswer4_3} cm²`);
+            
+            const allChoices4 = [`${area} cm²`, ...wrongAnswers4];
+            const choices4 = shuffleArray(allChoices4);
+            const correctIndex4 = choices4.indexOf(`${area} cm²`);
+            
             questions.push({
                 q: `Diện tích hình vuông có cạnh ${side} cm là:`,
                 choices: choices4,
-                correct: choices4.indexOf(`${area} cm²`)
+                correct: correctIndex4
             });
 
             return questions;
@@ -775,22 +944,26 @@
             return questions;
         }
 
-        // Tạo câu hỏi cho Phần 4: Giải toán có lời văn (5 câu)
+        // Tạo câu hỏi cho Phần 4: Giải toán có lời văn (5 câu) - sửa lại
         function generateWordProblems() {
             const questions = [];
 
             // Câu 1: Tìm một phần của một số - đảm bảo chia hết
-            const fractions = [2, 3, 4, 5, 6]; // Các mẫu số có thể chia hết
+            const fractions = [2, 3, 4, 5, 6];
             const fraction = fractions[getRandomNumber(0, fractions.length - 1)];
-            const part = getRandomNumber(20, 80); // Phần đã cho
-            const total1 = part * fraction; // Tổng số (đảm bảo chia hết)
+            const part = getRandomNumber(20, 80);
+            const total1 = part * fraction;
             const remaining = total1 - part;
+            
             const wrongAnswers1 = [
                 `${part} quyển`,
                 `${Math.floor(total1 / 2)} quyển`,
-                `${total1 - 50} quyển`
+                `${total1 - getRandomNumber(30, 70)} quyển`
             ];
-            const choices1 = shuffleArray([`${remaining} quyển`, ...wrongAnswers1]);
+            
+            const allChoices1 = [`${remaining} quyển`, ...wrongAnswers1];
+            const choices1 = shuffleArray(allChoices1);
+            
             questions.push({
                 q: `Một thư viện có ${total1} quyển sách. Cho mượn đi 1/${fraction} số sách. Hỏi thư viện còn lại bao nhiêu quyển sách?`,
                 choices: choices1,
@@ -798,14 +971,18 @@
             });
 
             // Câu 2: Tìm số khi biết giá trị của một phân số - đảm bảo chia hết
-            const childAge = getRandomNumber(8, 16); // Tuổi con
-            const motherAge = childAge * 3; // Tuổi mẹ (gấp 3 lần để đảm bảo chia hết)
+            const childAge = getRandomNumber(8, 16);
+            const motherAge = childAge * 3;
+            
             const wrongAnswers2 = [
-                `${childAge + 2} tuổi`,
-                `${childAge - 2} tuổi`,
+                `${childAge + getRandomNumber(1, 3)} tuổi`,
+                `${Math.max(1, childAge - getRandomNumber(1, 3))} tuổi`,
                 `${Math.floor(motherAge / 4)} tuổi`
             ];
-            const choices2 = shuffleArray([`${childAge} tuổi`, ...wrongAnswers2]);
+            
+            const allChoices2 = [`${childAge} tuổi`, ...wrongAnswers2];
+            const choices2 = shuffleArray(allChoices2);
+            
             questions.push({
                 q: `Tuổi con bằng 1/3 tuổi mẹ. Mẹ ${motherAge} tuổi. Hỏi con bao nhiêu tuổi?`,
                 choices: choices2,
@@ -814,15 +991,19 @@
 
             // Câu 3: Bài toán tỉ số, tổng-hiệu - đảm bảo chia hết
             const ratio = getRandomNumber(2, 4);
-            const smaller = getRandomNumber(15, 25); // Số nhỏ
-            const larger = smaller * ratio; // Số lớn
-            const sum = smaller + larger; // Tổng
+            const smaller = getRandomNumber(15, 25);
+            const larger = smaller * ratio;
+            const sum = smaller + larger;
+            
             const wrongAnswers3 = [
                 `${larger}`,
                 `${Math.floor(sum / 2)}`,
-                `${smaller + 10}`
+                `${smaller + getRandomNumber(5, 15)}`
             ];
-            const choices3 = shuffleArray([`${smaller}`, ...wrongAnswers3]);
+            
+            const allChoices3 = [`${smaller}`, ...wrongAnswers3];
+            const choices3 = shuffleArray(allChoices3);
+            
             questions.push({
                 q: `Tổng hai số là ${sum}. Số thứ nhất gấp ${ratio} lần số thứ hai. Số thứ hai là:`,
                 choices: choices3,
@@ -833,12 +1014,16 @@
             const speed = getRandomNumber(40, 80);
             const time = getRandomNumber(2, 6);
             const distance = speed * time;
+            
             const wrongAnswers4 = [
                 `${speed + time} km`,
                 `${Math.abs(speed - time)} km`,
-                `${distance + 50} km`
+                `${distance + getRandomNumber(20, 80)} km`
             ];
-            const choices4 = shuffleArray([`${distance} km`, ...wrongAnswers4]);
+            
+            const allChoices4 = [`${distance} km`, ...wrongAnswers4];
+            const choices4 = shuffleArray(allChoices4);
+            
             questions.push({
                 q: `Một xe máy chạy với vận tốc ${speed} km/giờ trong ${time} giờ. Quãng đường xe máy đi được là:`,
                 choices: choices4,
@@ -849,12 +1034,16 @@
             const length = getRandomNumber(20, 40);
             const width = getRandomNumber(10, 25);
             const area = length * width;
+            
             const wrongAnswers5 = [
                 `${2 * (length + width)} m²`,
                 `${length + width} m²`,
-                `${area + 100} m²`
+                `${area + getRandomNumber(50, 150)} m²`
             ];
-            const choices5 = shuffleArray([`${area} m²`, ...wrongAnswers5]);
+            
+            const allChoices5 = [`${area} m²`, ...wrongAnswers5];
+            const choices5 = shuffleArray(allChoices5);
+            
             questions.push({
                 q: `Một khu vườn hình chữ nhật có chiều dài ${length}m, chiều rộng ${width}m. Diện tích khu vườn là:`,
                 choices: choices5,
@@ -864,7 +1053,7 @@
             return questions;
         }
 
-        // Tạo câu hỏi cho Phần 5: Tư duy logic (2 câu)
+        // Tạo câu hỏi cho Phần 5: Tư duy logic (2 câu) - sửa lại
         function generateLogicQuestions() {
             const questions = [];
 
@@ -872,16 +1061,21 @@
             const start = getRandomNumber(2, 10);
             const step = getRandomNumber(2, 8);
             const sequence = [start, start + step, start + 2*step, start + 3*step, start + 4*step];
+            const correctAnswer = sequence[4];
+            
             const wrongAnswers1 = [
-                sequence[4] + step + getRandomNumber(1, 3),
-                sequence[4] - step + getRandomNumber(1, 3),
-                sequence[4] + step * 2
+                correctAnswer + step + getRandomNumber(1, 3),
+                Math.max(1, correctAnswer - step + getRandomNumber(1, 3)),
+                correctAnswer + step * 2
             ];
-            const choices1 = shuffleArray([sequence[4], ...wrongAnswers1]);
+            
+            const allChoices1 = [correctAnswer, ...wrongAnswers1];
+            const choices1 = shuffleArray(allChoices1);
+            
             questions.push({
                 q: `Tìm số tiếp theo trong dãy: ${sequence.slice(0, 4).join(', ')}, ?`,
                 choices: choices1.map(n => n.toString()),
-                correct: choices1.indexOf(sequence[4])
+                correct: choices1.indexOf(correctAnswer)
             });
 
             // Câu 2: Toán đố logic - đảm bảo kết quả là số tự nhiên
@@ -903,7 +1097,10 @@
                     `${Math.max(1, rabbits - 1)} con`,
                     `${Math.min(totalAnimals - 1, rabbits + 1)} con`
                 ];
-                const choices2 = shuffleArray([`${rabbits} con`, ...wrongAnswers2]);
+                
+                const allChoices2 = [`${rabbits} con`, ...wrongAnswers2];
+                const choices2 = shuffleArray(allChoices2);
+                
                 questions.push({
                     q: `Trong một chuồng có ${totalAnimals} con gà và thỏ. Đếm được tất cả ${totalLegs} chân. Hỏi có bao nhiêu con thỏ?`,
                     choices: choices2,
@@ -911,7 +1108,9 @@
                 });
             } else {
                 // Fallback với bài toán cố định có kết quả chắc chắn là số tự nhiên
-                const choices2 = shuffleArray(["6 con", "4 con", "5 con", "7 con"]);
+                const allChoices2 = ["6 con", "4 con", "5 con", "7 con"];
+                const choices2 = shuffleArray(allChoices2);
+                
                 questions.push({
                     q: `Trong một chuồng có 10 con gà và thỏ. Đếm được tất cả 32 chân. Hỏi có bao nhiêu con thỏ?`,
                     choices: choices2,
@@ -1047,7 +1246,7 @@
             const container = document.getElementById('questions-container');
             container.innerHTML = '';
             
-            let questionNumber = 1;
+            let globalQuestionNumber = 1;
             
             examSections.forEach((section, sectionIndex) => {
                 // Tạo header cho từng phần
@@ -1061,37 +1260,52 @@
                 
                 // Tạo câu hỏi cho từng phần
                 section.questions.forEach((question, questionIndex) => {
+                    const uniqueId = `question-${sectionIndex}-${questionIndex}`;
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question';
+                    questionDiv.id = uniqueId;
                     questionDiv.setAttribute('data-section', sectionIndex);
                     questionDiv.setAttribute('data-question', questionIndex);
+                    questionDiv.setAttribute('data-global-number', globalQuestionNumber);
+                    
+                    // Tạo HTML cho choices với event handler riêng biệt
+                    const choicesHTML = question.choices.map((choice, choiceIndex) => {
+                        return `<div class="choice" data-choice-index="${choiceIndex}" data-question-id="${uniqueId}">
+                            ${String.fromCharCode(65 + choiceIndex)}. ${choice}
+                        </div>`;
+                    }).join('');
                     
                     questionDiv.innerHTML = `
-                        <div class="question-number">Câu ${questionNumber}:</div>
+                        <div class="question-number">Câu ${globalQuestionNumber}:</div>
                         <div class="question-text">${question.q}</div>
                         <div class="choices">
-                            ${question.choices.map((choice, choiceIndex) => `
-                                <div class="choice" onclick="selectChoice(${sectionIndex}, ${questionIndex}, ${choiceIndex})">
-                                    ${String.fromCharCode(65 + choiceIndex)}. ${choice}
-                                </div>
-                            `).join('')}
+                            ${choicesHTML}
                         </div>
                     `;
                     
                     container.appendChild(questionDiv);
-                    questionNumber++;
+                    
+                    // Thêm event listeners cho các choices
+                    const choices = questionDiv.querySelectorAll('.choice');
+                    choices.forEach((choiceElement, choiceIndex) => {
+                        choiceElement.addEventListener('click', function() {
+                            selectChoice(uniqueId, sectionIndex, questionIndex, choiceIndex);
+                        });
+                    });
+                    
+                    globalQuestionNumber++;
                 });
             });
         }
 
-        function selectChoice(sectionIndex, questionIndex, choiceIndex) {
+        function selectChoice(uniqueId, sectionIndex, questionIndex, choiceIndex) {
             if (examSubmitted) return;
             
-            // Tìm question div tương ứng bằng data attributes
-            const questionDiv = document.querySelector(`[data-section="${sectionIndex}"][data-question="${questionIndex}"]`);
+            // Tìm question div bằng unique ID
+            const questionDiv = document.getElementById(uniqueId);
             if (!questionDiv) return;
             
-            // Remove previous selection
+            // Remove previous selection trong question này
             questionDiv.querySelectorAll('.choice').forEach(choice => {
                 choice.classList.remove('selected');
             });
@@ -1102,7 +1316,7 @@
                 selectedChoice.classList.add('selected');
             }
             
-            // Store answer
+            // Store answer với key duy nhất
             const answerKey = `${sectionIndex}-${questionIndex}`;
             userAnswers[answerKey] = choiceIndex;
             
@@ -1151,8 +1365,9 @@
                     const answerKey = `${sectionIndex}-${qIndex}`;
                     const userAnswer = userAnswers[answerKey];
                     
-                    // Find question div using data attributes
-                    const questionDiv = document.querySelector(`[data-section="${sectionIndex}"][data-question="${qIndex}"]`);
+                    // Find question div using unique ID
+                    const uniqueId = `question-${sectionIndex}-${qIndex}`;
+                    const questionDiv = document.getElementById(uniqueId);
                     
                     if (questionDiv) {
                         const choices = questionDiv.querySelectorAll('.choice');
