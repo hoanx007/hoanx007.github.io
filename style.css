@@ -1,0 +1,433 @@
+/* Reset và base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 25px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.level-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.operation-info {
+    text-align: center;
+    background: #e3f2fd;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 2px solid #bbdefb;
+}
+
+.operation-info p {
+    margin: 5px 0;
+    color: #1565c0;
+    font-weight: bold;
+}
+
+#current-operation {
+    color: #0d47a1;
+    font-size: 1.1em;
+}
+
+.game-controls label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 1.1em;
+}
+
+.game-controls select {
+    padding: 12px 20px;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 250px;
+}
+
+.game-controls select:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+}
+
+/* Score Board */
+.score-board {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background: #e3f2fd;
+    border-bottom: 2px solid #bbdefb;
+}
+
+.score-item {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #1565c0;
+}
+
+.score-item span:last-child {
+    color: #0d47a1;
+    font-size: 1.3em;
+}
+
+/* Question Container */
+.question-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.question {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border: 3px solid #e9ecef;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.answer-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.multiple-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.choice-btn {
+    padding: 20px;
+    font-size: 1.3em;
+    font-weight: bold;
+    background: #f8f9fa;
+    color: #495057;
+    border: 3px solid #dee2e6;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.choice-btn:hover:not(:disabled) {
+    background: #e9ecef;
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.2);
+}
+
+.choice-btn:disabled {
+    background: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.choice-btn.selected {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+    box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+}
+
+.choice-btn.correct {
+    background: #28a745;
+    color: white;
+    border-color: #1e7e34;
+    animation: correctChoice 0.6s ease;
+}
+
+.choice-btn.incorrect {
+    background: #dc3545;
+    color: white;
+    border-color: #bd2130;
+    animation: incorrectChoice 0.6s ease;
+}
+
+@keyframes correctChoice {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes incorrectChoice {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+}
+
+/* Result */
+.result {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 10px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result.correct {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.result.incorrect {
+    background: #f8d7da;
+    color: #721c24;
+    border: 2px solid #f5c6cb;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.action-buttons button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#new-question-btn {
+    background: #007bff;
+    color: white;
+}
+
+#new-question-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+}
+
+#reset-btn {
+    background: #dc3545;
+    color: white;
+}
+
+#reset-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+}
+
+/* Progress Bar */
+.progress-container {
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+.progress-container p {
+    text-align: center;
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Achievements */
+.achievements {
+    padding: 20px;
+    background: #fff3cd;
+    border-top: 2px solid #ffeaa7;
+}
+
+.achievements h3 {
+    text-align: center;
+    color: #856404;
+    margin-bottom: 15px;
+}
+
+.achievement-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.achievement {
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 2px solid #ffeaa7;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #856404;
+    animation: achievementPop 0.5s ease;
+}
+
+@keyframes achievementPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        border-radius: 15px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .game-controls {
+        padding: 20px 15px;
+    }
+    
+    .game-controls select {
+        min-width: 200px;
+        font-size: 14px;
+    }
+    
+    .operation-info {
+        padding: 12px 15px;
+    }
+    
+    .operation-info p {
+        font-size: 0.9em;
+    }
+    
+    .score-board {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .question {
+        font-size: 2em;
+    }
+    
+    .multiple-choice {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+    
+    .choice-btn {
+        font-size: 1.1em;
+        padding: 15px;
+        min-height: 60px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .action-buttons button, .action-buttons a button {
+        width: 200px;
+    }
+}
+
+/* Animation cho câu trả lời đúng/sai */
+@keyframes correctAnswer {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); background: #d4edda; }
+    100% { transform: scale(1); }
+}
+
+@keyframes incorrectAnswer {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.question.correct-animation {
+    animation: correctAnswer 0.6s ease;
+}
+
+.question.incorrect-animation {
+    animation: incorrectAnswer 0.6s ease;
+}

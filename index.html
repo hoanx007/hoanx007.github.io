@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Toán Học Lớp 4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧮 Luyện Tập Toán Học Lớp 4</h1>
+            <p>Cộng - Trừ - Nhân - Chia trong phạm vi đến hàng chục nghìn</p>
+        </header>
+
+        <div class="game-controls">
+            <div class="level-selector">
+                <label>Chọn cấp độ:</label>
+                <select id="difficulty">
+                    <option value="easy">🟢 Cấp độ 1 - Dễ (1-100)</option>
+                    <option value="medium">🟡 Cấp độ 2 - Trung bình (1-1000)</option>
+                    <option value="hard">🔴 Cấp độ 3 - Khó (1-10000)</option>
+                </select>
+            </div>
+            
+            <div class="operation-info">
+                <p>🎲 Phép tính: <span id="current-operation">Ngẫu nhiên</span></p>
+                <p>📊 Tất cả phép tính sẽ xuất hiện ngẫu nhiên: +, -, ×, ÷</p>
+            </div>
+        </div>
+
+        <div class="score-board">
+            <div class="score-item">
+                <span>Điểm: </span>
+                <span id="score">0</span>
+            </div>
+            <div class="score-item">
+                <span>Câu hỏi: </span>
+                <span id="question-count">0</span>
+            </div>
+            <div class="score-item">
+                <span>Đúng: </span>
+                <span id="correct-count">0</span>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <div class="question" id="question">
+                Nhấn "Câu hỏi mới" để bắt đầu!
+            </div>
+            
+            <div class="answer-section">
+                <div class="multiple-choice" id="multiple-choice">
+                    <button class="choice-btn" data-value="" disabled>A. </button>
+                    <button class="choice-btn" data-value="" disabled>B. </button>
+                    <button class="choice-btn" data-value="" disabled>C. </button>
+                    <button class="choice-btn" data-value="" disabled>D. </button>
+                </div>
+            </div>
+            
+            <div class="result" id="result"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="new-question-btn">Câu hỏi mới</button>
+            <button id="reset-btn">Làm lại</button>
+            <a href="de-on-tap.html" style="text-decoration: none;">
+                <button style="padding: 15px 30px; font-size: 1.1em; background: #17a2b8; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">📚 Đề ôn tập</button>
+            </a>
+            <a href="de-thi-tong-hop.html" style="text-decoration: none;">
+                <button style="padding: 15px 30px; font-size: 1.1em; background: #fd7e14; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">📋 Đề thi tổng hợp</button>
+            </a>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p>Tiến độ: <span id="progress-text">0%</span></p>
+        </div>
+
+        <div class="achievements">
+            <h3>🏆 Thành tích</h3>
+            <div class="achievement-list" id="achievements">
+                <!-- Achievements will be added dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

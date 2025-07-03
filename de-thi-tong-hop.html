@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Thi Tổng Hợp Toán Học Lớp 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .timer-display {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            border: 2px solid #ffc107;
+            display: none;
+        }
+
+        .exam-info {
+            background: #e3f2fd;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border: 2px solid #bbdefb;
+        }
+
+        .exam-info h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .exam-info ul {
+            color: #0d47a1;
+            margin-left: 20px;
+        }
+
+        .exam-info li {
+            margin: 5px 0;
+        }
+
+        .exam-selector {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .exam-selector h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .exam-option {
+            padding: 15px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .exam-option:hover {
+            border-color: #007bff;
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
+        .exam-option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .start-section {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .start-btn {
+            padding: 20px 40px;
+            font-size: 1.3em;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .start-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40,167,69,0.4);
+        }
+
+        .start-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 600px;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto 10px auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-info p {
+            font-weight: bold;
+            color: #495057;
+            margin: 0;
+        }
+
+        .exam-section {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .exam-section.active {
+            display: block;
+        }
+
+        #questions-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+
+        .question {
+            background: #f8f9fa;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .choice {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .choice:hover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .choice.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .choice.correct {
+            background: #28a745;
+            color: white;
+            border-color: #1e7e34;
+        }
+
+        .choice.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #bd2130;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .back-btn:hover {
+            background: #545b62;
+        }
+
+        .results-history {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+
+        .results-history h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-score {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .result-time {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .clear-history-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        /* Desktop specific styles */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            #questions-container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 0 40px;
+            }
+
+            .submit-section {
+                max-width: 900px;
+                margin: 30px auto;
+                padding: 0 40px;
+            }
+
+            .result-section {
+                max-width: 900px;
+                margin: 20px auto;
+                padding: 20px 40px;
+            }
+
+            .progress-info {
+                padding: 15px 40px;
+            }
+
+            .exam-section {
+                padding: 20px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .choices {
+                grid-template-columns: 1fr;
+            }
+            
+            .choice {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            .exam-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+            }
+
+            .exam-option {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .timer-display {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            #questions-container {
+                padding: 0 10px;
+            }
+
+            .progress-info {
+                padding: 10px 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .exam-section {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" id="main-header">
+            <h1>📋 Đề Thi Tổng Hợp Toán Học Lớp 4</h1>
+            <p>🎯 Kiểm tra toàn diện kiến thức toán học lớp 4</p>
+            <div class="timer-display" id="timer-display">
+                ⏰ Thời gian: <span id="timer">00:00</span>
+            </div>
+        </div>
+
+        <div id="intro-section">
+            <div class="exam-info">
+                <h3>📚 Cấu trúc đề thi:</h3>
+                <ul>
+                    <li><strong>Phần 1:</strong> Trắc nghiệm Số học (5 câu)</li>
+                    <li><strong>Phần 2:</strong> Trắc nghiệm Đại lượng và đo lường (4 câu)</li>
+                    <li><strong>Phần 3:</strong> Trắc nghiệm Hình học (4 câu)</li>
+                    <li><strong>Phần 4:</strong> Giải toán có lời văn (5 câu)</li>
+                    <li><strong>Phần 5:</strong> Tư duy logic, nâng cao (2 câu)</li>
+                </ul>
+                <br>
+                <p><strong>⏰ Thời gian:</strong> 60 phút | <strong>📊 Tổng số câu:</strong> 20 câu | <strong>🎯 Điểm tối đa:</strong> 20 điểm</p>
+            </div>
+
+            <div class="exam-selector">
+                <h3>🎯 Chọn đề thi (40 đề khác nhau)</h3>
+                <div class="exam-grid" id="exam-grid">
+                    <!-- Sẽ được tạo bằng JavaScript -->
+                </div>
+                <div class="start-section">
+                    <button class="start-btn" id="start-btn" onclick="startExam()" disabled>🚀 Bắt đầu làm bài</button>
+                </div>
+            </div>
+
+            <div class="results-history" id="results-history">
+                <h3>📊 Lịch sử kết quả</h3>
+                <div id="history-list">
+                    <!-- Sẽ được tạo bằng JavaScript -->
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="clear-history-btn" onclick="clearHistory()">🗑️ Xóa lịch sử</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="exam-section" id="exam-content">
+            <div class="progress-info" id="progress-info">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p>Tiến độ: <span id="progress-text">0/20 câu</span></p>
+            </div>
+
+            <div id="questions-container"></div>
+
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitExam()">📝 Nộp bài thi</button>
+            </div>
+
+            <div class="result-section" id="result-section"></div>
+        </div>
+    </div>
+
+    <script>
+        // Hàm tạo số ngẫu nhiên
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Hàm trộn mảng
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Tạo câu hỏi cho Phần 1: Số học (5 câu)
+        function generateMathQuestions() {
+            const questions = [];
+            
+            // Câu 1: Phép cộng số có nhiều chữ số
+            const a1 = getRandomNumber(1234, 8999);
+            const b1 = getRandomNumber(1234, 8999);
+            const sum = a1 + b1;
+            const wrongAnswers1 = [
+                sum + getRandomNumber(100, 500),
+                sum - getRandomNumber(100, 500),
+                sum + getRandomNumber(1000, 2000)
+            ];
+            const choices1 = shuffleArray([sum, ...wrongAnswers1]);
+            questions.push({
+                q: `Tính: ${a1.toLocaleString()} + ${b1.toLocaleString()} = ?`,
+                choices: choices1.map(n => n.toLocaleString()),
+                correct: choices1.indexOf(sum)
+            });
+
+            // Câu 2: Phép trừ số có nhiều chữ số - đảm bảo kết quả dương
+            const a2 = getRandomNumber(6000, 9999);
+            const b2 = getRandomNumber(1000, 5999); // Đảm bảo a2 > b2
+            const diff = a2 - b2;
+            const wrongAnswers2 = [
+                diff + getRandomNumber(200, 800),
+                Math.max(100, diff - getRandomNumber(200, 800)), // Đảm bảo không âm
+                diff + getRandomNumber(1000, 1500)
+            ];
+            const choices2 = shuffleArray([diff, ...wrongAnswers2]);
+            questions.push({
+                q: `Tính: ${a2.toLocaleString()} - ${b2.toLocaleString()} = ?`,
+                choices: choices2.map(n => n.toLocaleString()),
+                correct: choices2.indexOf(diff)
+            });
+
+            // Câu 3: Phép nhân
+            const a3 = getRandomNumber(123, 999);
+            const b3 = getRandomNumber(2, 12);
+            const product = a3 * b3;
+            const wrongAnswers3 = [
+                product + getRandomNumber(100, 500),
+                Math.max(100, product - getRandomNumber(100, 500)), // Đảm bảo dương
+                product + getRandomNumber(1000, 2000)
+            ];
+            const choices3 = shuffleArray([product, ...wrongAnswers3]);
+            questions.push({
+                q: `Tính: ${a3} × ${b3} = ?`,
+                choices: choices3.map(n => n.toLocaleString()),
+                correct: choices3.indexOf(product)
+            });
+
+            // Câu 4: Phép chia - đảm bảo chia hết
+            const divisor = getRandomNumber(12, 25);
+            const quotient = getRandomNumber(45, 150);
+            const dividend = divisor * quotient; // Đảm bảo chia hết
+            const wrongAnswers4 = [
+                quotient + getRandomNumber(10, 30),
+                Math.max(1, quotient - getRandomNumber(10, 30)), // Đảm bảo dương
+                quotient + getRandomNumber(50, 100)
+            ];
+            const choices4 = shuffleArray([quotient, ...wrongAnswers4]);
+            questions.push({
+                q: `Tính: ${dividend} ÷ ${divisor} = ?`,
+                choices: choices4.map(n => n.toString()),
+                correct: choices4.indexOf(quotient)
+            });
+
+            // Câu 5: So sánh số
+            const numbers = [];
+            for (let i = 0; i < 4; i++) {
+                numbers.push(getRandomNumber(8000, 9999));
+            }
+            const maxNumber = Math.max(...numbers);
+            const shuffledNumbers = shuffleArray(numbers);
+            questions.push({
+                q: `Số nào lớn nhất trong các số sau: ${numbers.join(', ')}?`,
+                choices: shuffledNumbers.map(n => n.toString()),
+                correct: shuffledNumbers.indexOf(maxNumber)
+            });
+
+            return questions;
+        }
+
+        // Tạo câu hỏi cho Phần 2: Đại lượng và đo lường (4 câu)
+        function generateMeasurementQuestions() {
+            const questions = [];
+            
+            // Câu 1: Chuyển đổi đơn vị độ dài
+            const m = getRandomNumber(3, 9);
+            const dm = getRandomNumber(1, 9);
+            const cm = getRandomNumber(10, 99);
+            const totalCm = m * 100 + dm * 10 + cm;
+            const wrongAnswers1 = [
+                `${m}${dm}${cm} cm`,
+                `${m + dm + cm} cm`,
+                `${totalCm + 100} cm`
+            ];
+            const choices1 = shuffleArray([`${totalCm} cm`, ...wrongAnswers1]);
+            questions.push({
+                q: `${m} mét ${dm} đềximét ${cm} centimét bằng bao nhiêu centimét?`,
+                choices: choices1,
+                correct: choices1.indexOf(`${totalCm} cm`)
+            });
+
+            // Câu 2: Chu vi hình chữ nhật
+            const length = getRandomNumber(8, 20);
+            const width = getRandomNumber(5, 15);
+            const perimeter = 2 * (length + width);
+            const wrongAnswers2 = [
+                `${length + width} m`,
+                `${length * width} m`,
+                `${perimeter + 4} m`
+            ];
+            const choices2 = shuffleArray([`${perimeter} m`, ...wrongAnswers2]);
+            questions.push({
+                q: `Chu vi hình chữ nhật có chiều dài ${length}m, chiều rộng ${width}m là:`,
+                choices: choices2,
+                correct: choices2.indexOf(`${perimeter} m`)
+            });
+
+            // Câu 3: Chuyển đổi khối lượng
+            const kg = getRandomNumber(2, 8);
+            const g = getRandomNumber(100, 900); // Đảm bảo là số tròn trăm
+            const totalG = kg * 1000 + g;
+            const wrongAnswers3 = [
+                `${kg}${g} g`,
+                `${kg + g} g`,
+                `${totalG - 500} g`
+            ];
+            const choices3 = shuffleArray([`${totalG} g`, ...wrongAnswers3]);
+            questions.push({
+                q: `${kg} kg ${g} g bằng bao nhiêu gam?`,
+                choices: choices3,
+                correct: choices3.indexOf(`${totalG} g`)
+            });
+
+            // Câu 4: Diện tích hình vuông
+            const side = getRandomNumber(6, 15);
+            const area = side * side;
+            const wrongAnswers4 = [
+                `${side * 4} cm²`,
+                `${side * 2} cm²`,
+                `${area + 20} cm²`
+            ];
+            const choices4 = shuffleArray([`${area} cm²`, ...wrongAnswers4]);
+            questions.push({
+                q: `Diện tích hình vuông có cạnh ${side} cm là:`,
+                choices: choices4,
+                correct: choices4.indexOf(`${area} cm²`)
+            });
+
+            return questions;
+        }
+
+        // Tạo câu hỏi cho Phần 3: Hình học (4 câu)
+        function generateGeometryQuestions() {
+            const questions = [];
+
+            // Câu 1: Nhận biết hình
+            const choices1 = shuffleArray([
+                "4 cạnh bằng nhau và 4 góc vuông",
+                "4 cạnh bằng nhau nhưng không có góc vuông",
+                "2 cặp cạnh đối bằng nhau",
+                "3 cạnh bằng nhau"
+            ]);
+            questions.push({
+                q: "Hình vuông có đặc điểm gì?",
+                choices: choices1,
+                correct: choices1.indexOf("4 cạnh bằng nhau và 4 góc vuông")
+            });
+
+            // Câu 2: Đường thẳng song song
+            const choices2 = shuffleArray([
+                "Không bao giờ cắt nhau",
+                "Cắt nhau tại 1 điểm",
+                "Cắt nhau tại 2 điểm",
+                "Trùng nhau"
+            ]);
+            questions.push({
+                q: "Hai đường thẳng song song có tính chất gì?",
+                choices: choices2,
+                correct: choices2.indexOf("Không bao giờ cắt nhau")
+            });
+
+            // Câu 3: Diện tích hình chữ nhật
+            const length = getRandomNumber(12, 25);
+            const width = getRandomNumber(6, 15);
+            const area = length * width;
+            const wrongAnswers3 = [
+                `${2 * (length + width)} cm²`,
+                `${length + width} cm²`,
+                `${area + 50} cm²`
+            ];
+            const choices3 = shuffleArray([`${area} cm²`, ...wrongAnswers3]);
+            questions.push({
+                q: `Diện tích hình chữ nhật dài ${length} cm, rộng ${width} cm là:`,
+                choices: choices3,
+                correct: choices3.indexOf(`${area} cm²`)
+            });
+
+            // Câu 4: Hình thoi
+            const choices4 = shuffleArray([
+                "4 cạnh bằng nhau",
+                "4 góc vuông",
+                "2 cặp cạnh đối bằng nhau",
+                "3 cạnh bằng nhau"
+            ]);
+            questions.push({
+                q: "Hình thoi có đặc điểm gì?",
+                choices: choices4,
+                correct: choices4.indexOf("4 cạnh bằng nhau")
+            });
+
+            return questions;
+        }
+
+        // Tạo câu hỏi cho Phần 4: Giải toán có lời văn (5 câu)
+        function generateWordProblems() {
+            const questions = [];
+
+            // Câu 1: Tìm một phần của một số - đảm bảo chia hết
+            const fractions = [2, 3, 4, 5, 6]; // Các mẫu số có thể chia hết
+            const fraction = fractions[getRandomNumber(0, fractions.length - 1)];
+            const part = getRandomNumber(20, 80); // Phần đã cho
+            const total1 = part * fraction; // Tổng số (đảm bảo chia hết)
+            const remaining = total1 - part;
+            const wrongAnswers1 = [
+                `${part} quyển`,
+                `${Math.floor(total1 / 2)} quyển`,
+                `${total1 - 50} quyển`
+            ];
+            const choices1 = shuffleArray([`${remaining} quyển`, ...wrongAnswers1]);
+            questions.push({
+                q: `Một thư viện có ${total1} quyển sách. Cho mượn đi 1/${fraction} số sách. Hỏi thư viện còn lại bao nhiêu quyển sách?`,
+                choices: choices1,
+                correct: choices1.indexOf(`${remaining} quyển`)
+            });
+
+            // Câu 2: Tìm số khi biết giá trị của một phân số - đảm bảo chia hết
+            const childAge = getRandomNumber(8, 16); // Tuổi con
+            const motherAge = childAge * 3; // Tuổi mẹ (gấp 3 lần để đảm bảo chia hết)
+            const wrongAnswers2 = [
+                `${childAge + 2} tuổi`,
+                `${childAge - 2} tuổi`,
+                `${Math.floor(motherAge / 4)} tuổi`
+            ];
+            const choices2 = shuffleArray([`${childAge} tuổi`, ...wrongAnswers2]);
+            questions.push({
+                q: `Tuổi con bằng 1/3 tuổi mẹ. Mẹ ${motherAge} tuổi. Hỏi con bao nhiêu tuổi?`,
+                choices: choices2,
+                correct: choices2.indexOf(`${childAge} tuổi`)
+            });
+
+            // Câu 3: Bài toán tỉ số, tổng-hiệu - đảm bảo chia hết
+            const ratio = getRandomNumber(2, 4);
+            const smaller = getRandomNumber(15, 25); // Số nhỏ
+            const larger = smaller * ratio; // Số lớn
+            const sum = smaller + larger; // Tổng
+            const wrongAnswers3 = [
+                `${larger}`,
+                `${Math.floor(sum / 2)}`,
+                `${smaller + 10}`
+            ];
+            const choices3 = shuffleArray([`${smaller}`, ...wrongAnswers3]);
+            questions.push({
+                q: `Tổng hai số là ${sum}. Số thứ nhất gấp ${ratio} lần số thứ hai. Số thứ hai là:`,
+                choices: choices3,
+                correct: choices3.indexOf(`${smaller}`)
+            });
+
+            // Câu 4: Bài toán chuyển động - đảm bảo số nguyên
+            const speed = getRandomNumber(40, 80);
+            const time = getRandomNumber(2, 6);
+            const distance = speed * time;
+            const wrongAnswers4 = [
+                `${speed + time} km`,
+                `${Math.abs(speed - time)} km`,
+                `${distance + 50} km`
+            ];
+            const choices4 = shuffleArray([`${distance} km`, ...wrongAnswers4]);
+            questions.push({
+                q: `Một xe máy chạy với vận tốc ${speed} km/giờ trong ${time} giờ. Quãng đường xe máy đi được là:`,
+                choices: choices4,
+                correct: choices4.indexOf(`${distance} km`)
+            });
+
+            // Câu 5: Bài toán diện tích thực tế
+            const length = getRandomNumber(20, 40);
+            const width = getRandomNumber(10, 25);
+            const area = length * width;
+            const wrongAnswers5 = [
+                `${2 * (length + width)} m²`,
+                `${length + width} m²`,
+                `${area + 100} m²`
+            ];
+            const choices5 = shuffleArray([`${area} m²`, ...wrongAnswers5]);
+            questions.push({
+                q: `Một khu vườn hình chữ nhật có chiều dài ${length}m, chiều rộng ${width}m. Diện tích khu vườn là:`,
+                choices: choices5,
+                correct: choices5.indexOf(`${area} m²`)
+            });
+
+            return questions;
+        }
+
+        // Tạo câu hỏi cho Phần 5: Tư duy logic (2 câu)
+        function generateLogicQuestions() {
+            const questions = [];
+
+            // Câu 1: Tìm quy luật dãy số - đảm bảo số tự nhiên
+            const start = getRandomNumber(2, 10);
+            const step = getRandomNumber(2, 8);
+            const sequence = [start, start + step, start + 2*step, start + 3*step, start + 4*step];
+            const wrongAnswers1 = [
+                sequence[4] + step + getRandomNumber(1, 3),
+                sequence[4] - step + getRandomNumber(1, 3),
+                sequence[4] + step * 2
+            ];
+            const choices1 = shuffleArray([sequence[4], ...wrongAnswers1]);
+            questions.push({
+                q: `Tìm số tiếp theo trong dãy: ${sequence.slice(0, 4).join(', ')}, ?`,
+                choices: choices1.map(n => n.toString()),
+                correct: choices1.indexOf(sequence[4])
+            });
+
+            // Câu 2: Toán đố logic - đảm bảo kết quả là số tự nhiên
+            // Tạo bài toán gà thỏ với kết quả đảm bảo là số nguyên dương
+            let totalAnimals, totalLegs, rabbits, chickens;
+            let attempts = 0;
+            
+            do {
+                totalAnimals = getRandomNumber(8, 15);
+                totalLegs = getRandomNumber(24, 40);
+                rabbits = (totalLegs - 2 * totalAnimals) / 2;
+                chickens = totalAnimals - rabbits;
+                attempts++;
+            } while ((rabbits <= 0 || chickens <= 0 || !Number.isInteger(rabbits) || !Number.isInteger(chickens)) && attempts < 20);
+            
+            if (rabbits > 0 && chickens > 0 && Number.isInteger(rabbits) && Number.isInteger(chickens)) {
+                const wrongAnswers2 = [
+                    `${chickens} con`,
+                    `${Math.max(1, rabbits - 1)} con`,
+                    `${Math.min(totalAnimals - 1, rabbits + 1)} con`
+                ];
+                const choices2 = shuffleArray([`${rabbits} con`, ...wrongAnswers2]);
+                questions.push({
+                    q: `Trong một chuồng có ${totalAnimals} con gà và thỏ. Đếm được tất cả ${totalLegs} chân. Hỏi có bao nhiêu con thỏ?`,
+                    choices: choices2,
+                    correct: choices2.indexOf(`${rabbits} con`)
+                });
+            } else {
+                // Fallback với bài toán cố định có kết quả chắc chắn là số tự nhiên
+                const choices2 = shuffleArray(["6 con", "4 con", "5 con", "7 con"]);
+                questions.push({
+                    q: `Trong một chuồng có 10 con gà và thỏ. Đếm được tất cả 32 chân. Hỏi có bao nhiêu con thỏ?`,
+                    choices: choices2,
+                    correct: choices2.indexOf("6 con")
+                });
+            }
+
+            return questions;
+        }
+
+        // Tạo đề thi hoàn chỉnh
+        function generateCompleteExam() {
+            return [
+                {
+                    title: "Phần 1 - Trắc nghiệm Số học",
+                    description: "Ôn tập các phép tính với số tự nhiên: Cộng, trừ, nhân, chia số có nhiều chữ số. Tính nhẩm nhanh, phân tích số. Đọc, viết, so sánh",
+                    questions: generateMathQuestions()
+                },
+                {
+                    title: "Phần 2 - Trắc nghiệm Đại lượng và đo lường",
+                    description: "Đơn vị đo độ dài, diện tích, thể tích, khối lượng. Chuyển đổi đơn vị (m, dm, cm, mm; kg, g...). Tính chu vi, diện tích các hình: vuông, chữ nhật",
+                    questions: generateMeasurementQuestions()
+                },
+                {
+                    title: "Phần 3 - Trắc nghiệm Hình học",
+                    description: "Nhận biết và vẽ hình: Hình vuông, hình chữ nhật, tam giác, hình thoi. Đường thẳng song song, vuông góc. Tính diện tích các hình đã học",
+                    questions: generateGeometryQuestions()
+                },
+                {
+                    title: "Phần 4 - Giải toán có lời văn",
+                    description: "Tìm một phần (hoặc nhiều phần) của một số. Tìm số khi biết giá trị của một phân số của nó. Bài toán về tỉ số, tổng – hiệu – phần. Bài toán chuyển động đơn giản",
+                    questions: generateWordProblems()
+                },
+                {
+                    title: "Phần 5 - Tư duy logic, nâng cao",
+                    description: "Toán đố mẹo, toán suy luận. Dạng \"chọn số đúng\", \"điền số thích hợp\", \"tìm quy luật dãy số\"",
+                    questions: generateLogicQuestions()
+                }
+            ];
+        }
+
+        // Biến toàn cục
+        let examSections = [];
+        let userAnswers = {};
+        let examStarted = false;
+        let examSubmitted = false;
+        let selectedExamNumber = null;
+        let startTime = null;
+        let timerInterval = null;
+
+        // Khởi tạo trang
+        document.addEventListener('DOMContentLoaded', function() {
+            generateExamSelector();
+            loadResultsHistory();
+            setupScrollHandler();
+        });
+
+        // Tiếp tục với phần JavaScript còn lại...
+        
+        function generateExamSelector() {
+            const examGrid = document.getElementById('exam-grid');
+            examGrid.innerHTML = '';
+            
+            for (let i = 1; i <= 40; i++) {
+                const examOption = document.createElement('div');
+                examOption.className = 'exam-option';
+                examOption.textContent = `Đề ${i}`;
+                examOption.onclick = () => selectExam(i);
+                examGrid.appendChild(examOption);
+            }
+        }
+
+        function selectExam(examNumber) {
+            selectedExamNumber = examNumber;
+            
+            // Remove previous selection
+            document.querySelectorAll('.exam-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            event.target.classList.add('selected');
+            
+            // Enable start button
+            document.getElementById('start-btn').disabled = false;
+            
+            // Generate exam data for selected exam using seed
+            Math.seedrandom(examNumber);
+            examSections = generateCompleteExam();
+        }
+
+        function startExam() {
+            if (!selectedExamNumber) return;
+            
+            document.getElementById('intro-section').style.display = 'none';
+            document.getElementById('exam-content').classList.add('active');
+            examStarted = true;
+            startTime = new Date();
+            
+            // Start timer
+            startTimer();
+            
+            // Show timer in header
+            document.getElementById('timer-display').style.display = 'block';
+            
+            generateExam();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const elapsed = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function setupScrollHandler() {
+            // Không cần xử lý scroll nữa - đã gỡ bỏ sticky header
+        }
+
+        function generateExam() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            let questionNumber = 1;
+            
+            examSections.forEach((section, sectionIndex) => {
+                // Tạo header cho từng phần
+                const sectionHeader = document.createElement('div');
+                sectionHeader.className = 'section-header';
+                sectionHeader.innerHTML = `
+                    <div class="section-title">${section.title}</div>
+                    <div class="section-description">${section.description}</div>
+                `;
+                container.appendChild(sectionHeader);
+                
+                // Tạo câu hỏi cho từng phần
+                section.questions.forEach((question, questionIndex) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.setAttribute('data-section', sectionIndex);
+                    questionDiv.setAttribute('data-question', questionIndex);
+                    
+                    questionDiv.innerHTML = `
+                        <div class="question-number">Câu ${questionNumber}:</div>
+                        <div class="question-text">${question.q}</div>
+                        <div class="choices">
+                            ${question.choices.map((choice, choiceIndex) => `
+                                <div class="choice" onclick="selectChoice(${sectionIndex}, ${questionIndex}, ${choiceIndex})">
+                                    ${String.fromCharCode(65 + choiceIndex)}. ${choice}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    
+                    container.appendChild(questionDiv);
+                    questionNumber++;
+                });
+            });
+        }
+
+        function selectChoice(sectionIndex, questionIndex, choiceIndex) {
+            if (examSubmitted) return;
+            
+            // Tìm question div tương ứng bằng data attributes
+            const questionDiv = document.querySelector(`[data-section="${sectionIndex}"][data-question="${questionIndex}"]`);
+            if (!questionDiv) return;
+            
+            // Remove previous selection
+            questionDiv.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected');
+            });
+            
+            // Add new selection
+            const selectedChoice = questionDiv.querySelectorAll('.choice')[choiceIndex];
+            if (selectedChoice) {
+                selectedChoice.classList.add('selected');
+            }
+            
+            // Store answer
+            const answerKey = `${sectionIndex}-${questionIndex}`;
+            userAnswers[answerKey] = choiceIndex;
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalQuestions = examSections.reduce((sum, section) => sum + section.questions.length, 0);
+            const answeredCount = Object.keys(userAnswers).length;
+            const percentage = (answeredCount / totalQuestions) * 100;
+            
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${answeredCount}/${totalQuestions} câu`;
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            
+            const totalQuestions = examSections.reduce((sum, section) => sum + section.questions.length, 0);
+            const answeredCount = Object.keys(userAnswers).length;
+            
+            if (answeredCount < totalQuestions) {
+                const unanswered = totalQuestions - answeredCount;
+                const confirmSubmit = confirm(
+                    `Bạn chưa trả lời ${unanswered} câu hỏi.\n\n` +
+                    `Bạn có muốn nộp bài ngay bây giờ không?\n` +
+                    `(Các câu chưa trả lời sẽ được tính là sai)`
+                );
+                
+                if (!confirmSubmit) return;
+            }
+            
+            examSubmitted = true;
+            stopTimer();
+            
+            // Disable all choices
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.style.pointerEvents = 'none';
+                choice.style.opacity = '0.8';
+            });
+            
+            let correctCount = 0;
+            
+            examSections.forEach((section, sectionIndex) => {
+                section.questions.forEach((question, qIndex) => {
+                    const answerKey = `${sectionIndex}-${qIndex}`;
+                    const userAnswer = userAnswers[answerKey];
+                    
+                    // Find question div using data attributes
+                    const questionDiv = document.querySelector(`[data-section="${sectionIndex}"][data-question="${qIndex}"]`);
+                    
+                    if (questionDiv) {
+                        const choices = questionDiv.querySelectorAll('.choice');
+                        
+                        // Highlight correct answer
+                        if (choices[question.correct]) {
+                            choices[question.correct].classList.add('correct');
+                        }
+                        
+                        // Highlight incorrect answer
+                        if (userAnswer !== undefined && userAnswer !== question.correct && choices[userAnswer]) {
+                            choices[userAnswer].classList.add('incorrect');
+                        } else if (userAnswer === undefined) {
+                            questionDiv.style.backgroundColor = '#fff3cd';
+                            questionDiv.style.border = '2px solid #ffc107';
+                        }
+                        
+                        // Count correct answers
+                        if (userAnswer === question.correct) {
+                            correctCount++;
+                        }
+                    }
+                });
+            });
+            
+            // Save result to localStorage
+            saveResult(correctCount, totalQuestions);
+            
+            showResult(correctCount, totalQuestions);
+        }
+
+        function saveResult(correct, total) {
+            const endTime = new Date();
+            const timeSpent = Math.floor((endTime - startTime) / 1000);
+            const percentage = Math.round((correct / total) * 100);
+            
+            const result = {
+                examNumber: selectedExamNumber,
+                score: correct,
+                total: total,
+                percentage: percentage,
+                timeSpent: timeSpent,
+                date: endTime.toISOString(),
+                timestamp: endTime.getTime()
+            };
+            
+            // Get existing results
+            let results = JSON.parse(localStorage.getItem('examResults') || '[]');
+            
+            // Add new result
+            results.push(result);
+            
+            // Keep only last 50 results
+            if (results.length > 50) {
+                results = results.slice(-50);
+            }
+            
+            // Save back to localStorage
+            localStorage.setItem('examResults', JSON.stringify(results));
+        }
+
+        function loadResultsHistory() {
+            const results = JSON.parse(localStorage.getItem('examResults') || '[]');
+            const historyList = document.getElementById('history-list');
+            
+            if (results.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #6c757d;">Chưa có kết quả nào</p>';
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            results.sort((a, b) => b.timestamp - a.timestamp);
+            
+            historyList.innerHTML = results.slice(0, 10).map(result => {
+                const date = new Date(result.date);
+                const timeStr = `${Math.floor(result.timeSpent / 60)}:${(result.timeSpent % 60).toString().padStart(2, '0')}`;
+                
+                let ratingEmoji = '';
+                if (result.percentage >= 90) ratingEmoji = '🌟';
+                else if (result.percentage >= 80) ratingEmoji = '👍';
+                else if (result.percentage >= 70) ratingEmoji = '😊';
+                else if (result.percentage >= 60) ratingEmoji = '📚';
+                else ratingEmoji = '💪';
+                
+                return `
+                    <div class="result-item">
+                        <div class="result-info">
+                            <div class="result-score">${ratingEmoji} Đề ${result.examNumber}: ${result.score}/${result.total} điểm (${result.percentage}%)</div>
+                            <div class="result-time">⏰ ${timeStr} - 📅 ${date.toLocaleDateString('vi-VN')} ${date.toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'})}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            if (confirm('Bạn có chắc muốn xóa toàn bộ lịch sử kết quả?')) {
+                localStorage.removeItem('examResults');
+                loadResultsHistory();
+            }
+        }
+
+        function showResult(correct, total) {
+            const endTime = new Date();
+            const timeSpent = Math.floor((endTime - startTime) / 1000);
+            const timeStr = `${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}`;
+            const percentage = Math.round((correct / total) * 100);
+            
+            let rating = '';
+            let emoji = '';
+            
+            if (percentage >= 90) {
+                rating = 'Xuất sắc';
+                emoji = '🌟';
+            } else if (percentage >= 80) {
+                rating = 'Giỏi';
+                emoji = '👍';
+            } else if (percentage >= 70) {
+                rating = 'Khá';
+                emoji = '😊';
+            } else if (percentage >= 60) {
+                rating = 'Trung bình';
+                emoji = '📚';
+            } else {
+                rating = 'Cần cố gắng thêm';
+                emoji = '💪';
+            }
+            
+            const resultDiv = document.getElementById('result-section');
+            resultDiv.innerHTML = `
+                <div class="score">${correct}/${total} điểm (${percentage}%)</div>
+                <div class="rating">${emoji} ${rating}</div>
+                <p><strong>Đề số:</strong> ${selectedExamNumber}</p>
+                <p><strong>Thời gian làm bài:</strong> ${timeStr}</p>
+                <p>Bạn đã hoàn thành đề thi tổng hợp toán học lớp 4!</p>
+                <button class="back-btn" onclick="resetExam()">🔄 Làm lại đề này</button>
+                <button class="back-btn" onclick="goHome()">🏠 Về trang chủ</button>
+            `;
+            
+            resultDiv.style.display = 'block';
+            document.querySelector('.submit-btn').style.display = 'none';
+            
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Reload history to show new result
+            setTimeout(() => {
+                loadResultsHistory();
+            }, 1000);
+        }
+
+        function resetExam() {
+            examSubmitted = false;
+            userAnswers = {};
+            startTime = new Date();
+            
+            // Reset timer
+            stopTimer();
+            startTimer();
+            
+            // Reset UI
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected', 'correct', 'incorrect');
+                choice.style.pointerEvents = 'auto';
+                choice.style.opacity = '1';
+            });
+            
+            document.querySelectorAll('.question').forEach(question => {
+                question.style.backgroundColor = '';
+                question.style.border = '';
+            });
+            
+            document.getElementById('result-section').style.display = 'none';
+            document.querySelector('.submit-btn').style.display = 'inline-block';
+            
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Add seedrandom function for consistent random generation
+        !function(f,a,c){var s,l=256,p="random",d=c.pow(l,6),g=c.pow(2,52),y=2*g,h=l-1;function n(n,t,r){function e(){for(var n=u.g(6),t=d,r=0;n<g;)n=(n+r)*l,t*=l,r=u.g(1);for(;y<=n;)n/=2,t/=2,r>>>=1;return(n+r)/t}var o=[],i=j(function n(t,r){var e,o=[],i=typeof t;if(r&&"object"==i)for(e in t)try{o.push(n(t[e],r-1))}catch(n){}return o.length?o:"string"==i?t:t+"\0"}((t=1==t?{entropy:!0}:t||{}).entropy?[n,S(a)]:null==n?function(){try{var n;return s&&(n=s.randomBytes)?n=n(l):(n=new Uint8Array(l),(f.crypto||f.msCrypto).getRandomValues(n)),S(n)}catch(n){var t=f.navigator,r=t&&t.plugins;return[+new Date,f,r,f.screen,S(a)]}}():n,3),o),u=new m(o);return e.int32=function(){return 0|u.g(4)},e.quick=function(){return u.g(4)/4294967296},e.double=e,j(S(u.S),a),(t.pass||r||function(n,t,r,e){return e&&(e.S&&v(e,u),n.state=function(){return v(u,{})}),r?(c[p]=n,t):n})(e,i,"global"in t?t.global:this==c,t.state)}function m(n){var t,r=n.length,u=this,e=0,o=u.i=u.j=0,i=u.S=[];for(r||(n=[r++]);e<l;)i[e]=e++;for(e=0;e<l;e++)i[e]=i[o=h&o+n[e%r]+(t=i[e])],i[o]=t;(u.g=function(n){for(var t,r=0,e=u.i,o=u.j,i=u.S;n--;)t=i[e=h&e+1],r=r*l+i[h&(i[e]=i[o=h&o+t])+(i[o]=t)];return u.i=e,u.j=o,r})(l)}function v(n,t){return t.i=n.i,t.j=n.j,t.S=n.S.slice(),t}function j(n,t){for(var r,e=n+"",o=0;o<e.length;)t[h&o]=h&(r^=19*t[h&o])+e.charCodeAt(o++);return S(t)}function S(n){return String.fromCharCode.apply(0,n)}if(j(c.random(),a),"object"==typeof module&&module.exports){module.exports=n;try{s=require("crypto")}catch(n){}}else"function"==typeof define&&define.amd?define(function(){return n}):c["seed"+p]=n}("undefined"!=typeof self?self:this,[],Math);
+    </script>
+</body>
+</html>
+</body>
+</html>

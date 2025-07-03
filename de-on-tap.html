@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Ôn Tập Toán Học Lớp 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.easy {
+            background: #28a745;
+            color: white;
+        }
+
+        .nav-btn.medium {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .nav-btn.hard {
+            background: #dc3545;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .exam-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .exam-section.active {
+            display: block;
+        }
+
+        .exam-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 10px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .choice {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .choice:hover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .choice.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .choice.correct {
+            background: #28a745;
+            color: white;
+            border-color: #1e7e34;
+        }
+
+        .choice.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #bd2130;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            background: #545b62;
+        }
+
+        .question.unanswered {
+            background: #fff3cd !important;
+            border: 2px solid #ffc107 !important;
+            animation: highlightUnanswered 1s ease-in-out 3;
+        }
+
+        @keyframes highlightUnanswered {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-info {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-info p {
+            font-weight: bold;
+            color: #495057;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
+            }
+
+            .choices {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Đề Ôn Tập Toán Học Lớp 4</h1>
+            <p>🎲 Đề thi ngẫu nhiên - Cộng, trừ, nhân, chia với 3 cấp độ khó</p>
+        </div>
+
+        <div class="nav-buttons" id="nav-section">
+            <button class="nav-btn easy" onclick="showExam('easy')">🟢 Đề Dễ (1-100) - Ngẫu nhiên</button>
+            <button class="nav-btn medium" onclick="showExam('medium')">🟡 Đề Trung Bình (1-1000) - Ngẫu nhiên</button>
+            <button class="nav-btn hard" onclick="showExam('hard')">🔴 Đề Khó (1-10000) - Ngẫu nhiên</button>
+        </div>
+
+        <!-- Đề Dễ -->
+        <div class="exam-section" id="easy-exam">
+            <div class="exam-title">🟢 ĐỀ NGẪU NHIÊN - CẤP ĐỘ DỄ</div>
+            <div class="progress-info" id="easy-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="easy-progress-fill"></div>
+                </div>
+                <p>Tiến độ: <span id="easy-progress-text">0/20 câu</span></p>
+            </div>
+            <div id="easy-questions"></div>
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitExam('easy')">Nộp Bài</button>
+            </div>
+            <div class="result-section" id="easy-result"></div>
+            <button class="back-btn" onclick="goBack()">← Quay lại chọn đề</button>
+        </div>
+
+        <!-- Đề Trung Bình -->
+        <div class="exam-section" id="medium-exam">
+            <div class="exam-title">🟡 ĐỀ NGẪU NHIÊN - CẤP ĐỘ TRUNG BÌNH</div>
+            <div class="progress-info" id="medium-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="medium-progress-fill"></div>
+                </div>
+                <p>Tiến độ: <span id="medium-progress-text">0/20 câu</span></p>
+            </div>
+            <div id="medium-questions"></div>
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitExam('medium')">Nộp Bài</button>
+            </div>
+            <div class="result-section" id="medium-result"></div>
+            <button class="back-btn" onclick="goBack()">← Quay lại chọn đề</button>
+        </div>
+
+        <!-- Đề Khó -->
+        <div class="exam-section" id="hard-exam">
+            <div class="exam-title">🔴 ĐỀ NGẪU NHIÊN - CẤP ĐỘ KHÓ</div>
+            <div class="progress-info" id="hard-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="hard-progress-fill"></div>
+                </div>
+                <p>Tiến độ: <span id="hard-progress-text">0/20 câu</span></p>
+            </div>
+            <div id="hard-questions"></div>
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitExam('hard')">Nộp Bài</button>
+            </div>
+            <div class="result-section" id="hard-result"></div>
+            <button class="back-btn" onclick="goBack()">← Quay lại chọn đề</button>
+        </div>
+    </div>
+
+    <script>
+        // Hàm tạo số ngẫu nhiên theo cấp độ
+        function getRandomNumber(level, operation) {
+            let max, min = 1;
+            
+            switch (level) {
+                case 'easy':
+                    max = 100;
+                    break;
+                case 'medium':
+                    max = 1000;
+                    break;
+                case 'hard':
+                    max = 10000;
+                    break;
+            }
+            
+            if (operation === 'divide') {
+                max = Math.min(max, 1000);
+            }
+            
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Hàm tạo câu hỏi ngẫu nhiên
+        function generateRandomQuestion(level) {
+            const operations = ['add', 'subtract', 'multiply', 'divide'];
+            const operationSymbols = {
+                'add': '+',
+                'subtract': '-',
+                'multiply': '×',
+                'divide': '÷'
+            };
+            
+            const selectedOperation = operations[Math.floor(Math.random() * operations.length)];
+            let num1, num2, answer, questionText;
+            
+            switch (selectedOperation) {
+                case 'add':
+                    num1 = getRandomNumber(level, 'add');
+                    num2 = getRandomNumber(level, 'add');
+                    answer = num1 + num2;
+                    break;
+                    
+                case 'subtract':
+                    num1 = getRandomNumber(level, 'subtract');
+                    num2 = getRandomNumber(level, 'subtract');
+                    if (num2 > num1) {
+                        [num1, num2] = [num2, num1];
+                    }
+                    answer = num1 - num2;
+                    break;
+                    
+                case 'multiply':
+                    num1 = getRandomNumber(level, 'multiply');
+                    num2 = Math.floor(Math.random() * 12) + 1;
+                    answer = num1 * num2;
+                    break;
+                    
+                case 'divide':
+                    num2 = Math.floor(Math.random() * 12) + 1;
+                    answer = getRandomNumber(level, 'divide');
+                    num1 = answer * num2;
+                    break;
+            }
+            
+            questionText = `${num1.toLocaleString()} ${operationSymbols[selectedOperation]} ${num2.toLocaleString()} = ?`;
+            
+            // Tạo đáp án sai
+            const choices = [answer];
+            const range = Math.max(10, Math.floor(answer * 0.5));
+            
+            while (choices.length < 4) {
+                let wrongAnswer;
+                const strategy = Math.floor(Math.random() * 4);
+                
+                switch (strategy) {
+                    case 0:
+                        wrongAnswer = answer + (Math.floor(Math.random() * 20) - 10);
+                        break;
+                    case 1:
+                        wrongAnswer = Math.floor(answer * (0.5 + Math.random()));
+                        break;
+                    case 2:
+                        wrongAnswer = Math.floor(answer * (0.7 + Math.random() * 0.6));
+                        break;
+                    case 3:
+                        wrongAnswer = answer + (Math.floor(Math.random() * range * 2) - range);
+                        break;
+                }
+                
+                if (wrongAnswer > 0 && !choices.includes(wrongAnswer)) {
+                    choices.push(wrongAnswer);
+                }
+            }
+            
+            // Trộn thứ tự đáp án
+            for (let i = choices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [choices[i], choices[j]] = [choices[j], choices[i]];
+            }
+            
+            return {
+                q: questionText,
+                choices: choices.map(c => c.toLocaleString()),
+                correct: choices.indexOf(answer)
+            };
+        }
+
+        // Hàm tạo bộ đề ngẫu nhiên
+        function generateRandomExam(level, questionCount = 20) {
+            const questions = [];
+            for (let i = 0; i < questionCount; i++) {
+                questions.push(generateRandomQuestion(level));
+            }
+            return questions;
+        }
+
+        // Dữ liệu câu hỏi - sẽ được tạo ngẫu nhiên
+        let examData = {
+            easy: [],
+            medium: [],
+            hard: []
+        };
+
+        let userAnswers = {};
+
+        function showExam(level) {
+            // Tạo đề mới ngẫu nhiên
+            examData[level] = generateRandomExam(level, 20);
+            
+            // Reset trạng thái nộp bài
+            examSubmitted[level] = false;
+            
+            // Ẩn navigation
+            document.getElementById('nav-section').style.display = 'none';
+            
+            // Hiện exam section
+            document.querySelectorAll('.exam-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(level + '-exam').classList.add('active');
+            
+            // Ẩn kết quả cũ
+            document.getElementById(level + '-result').style.display = 'none';
+            
+            // Hiện lại nút nộp bài
+            const submitBtn = document.querySelector(`#${level}-exam .submit-btn`);
+            if (submitBtn) {
+                submitBtn.style.display = 'inline-block';
+            }
+            
+            // Tạo câu hỏi
+            generateQuestions(level);
+            
+            // Reset user answers
+            userAnswers[level] = {};
+            
+            // Reset progress
+            updateProgress(level);
+        }
+
+        function generateQuestions(level) {
+            const questionsContainer = document.getElementById(level + '-questions');
+            const questions = examData[level];
+            
+            questionsContainer.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                questionDiv.innerHTML = `
+                    <div class="question-number">Câu ${index + 1}:</div>
+                    <div class="question-text">${question.q}</div>
+                    <div class="choices">
+                        ${question.choices.map((choice, choiceIndex) => `
+                            <div class="choice" onclick="selectChoice('${level}', ${index}, ${choiceIndex})">
+                                ${String.fromCharCode(65 + choiceIndex)}. ${choice}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                questionsContainer.appendChild(questionDiv);
+            });
+            
+            // Đảm bảo tất cả lựa chọn được kích hoạt cho đề mới
+            const allChoices = document.querySelectorAll(`#${level}-questions .choice`);
+            allChoices.forEach(choice => {
+                choice.style.pointerEvents = 'auto';
+                choice.style.cursor = 'pointer';
+                choice.style.opacity = '1';
+                choice.classList.remove('selected', 'correct', 'incorrect');
+            });
+        }
+
+        let examSubmitted = {
+            easy: false,
+            medium: false,
+            hard: false
+        };
+
+        function selectChoice(level, questionIndex, choiceIndex) {
+            // Không cho phép chọn nếu đã nộp bài
+            if (examSubmitted[level]) {
+                return;
+            }
+            
+            // Remove previous selection
+            const questionDiv = document.querySelectorAll(`#${level}-questions .question`)[questionIndex];
+            if (!questionDiv) return;
+            
+            questionDiv.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected');
+            });
+            
+            // Add new selection
+            const selectedChoice = questionDiv.querySelectorAll('.choice')[choiceIndex];
+            if (selectedChoice) {
+                selectedChoice.classList.add('selected');
+            }
+            
+            // Store answer
+            if (!userAnswers[level]) userAnswers[level] = {};
+            userAnswers[level][questionIndex] = choiceIndex;
+            
+            // Update progress
+            updateProgress(level);
+        }
+
+        function updateProgress(level) {
+            const totalQuestions = examData[level].length;
+            const answeredCount = userAnswers[level] ? Object.keys(userAnswers[level]).length : 0;
+            const percentage = (answeredCount / totalQuestions) * 100;
+            
+            // Update progress bar
+            const progressFill = document.getElementById(level + '-progress-fill');
+            const progressText = document.getElementById(level + '-progress-text');
+            
+            if (progressFill && progressText) {
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = `${answeredCount}/${totalQuestions} câu`;
+            }
+        }
+
+        function submitExam(level) {
+            // Kiểm tra nếu đã nộp bài rồi
+            if (examSubmitted[level]) {
+                return;
+            }
+            
+            const questions = examData[level];
+            
+            // Kiểm tra xem có câu nào chưa trả lời không
+            const unansweredQuestions = [];
+            for (let i = 0; i < questions.length; i++) {
+                if (!userAnswers[level] || userAnswers[level][i] === undefined) {
+                    unansweredQuestions.push(i + 1);
+                }
+            }
+            
+            // Nếu có câu chưa trả lời, hiển thị cảnh báo
+            if (unansweredQuestions.length > 0) {
+                const confirmSubmit = confirm(
+                    `Bạn chưa trả lời ${unansweredQuestions.length} câu hỏi:\n` +
+                    `Câu số: ${unansweredQuestions.join(', ')}\n\n` +
+                    `Bạn có muốn nộp bài ngay bây giờ không?\n` +
+                    `(Các câu chưa trả lời sẽ được tính là sai)`
+                );
+                
+                if (!confirmSubmit) {
+                    // Cuộn đến câu hỏi đầu tiên chưa trả lời
+                    const firstUnanswered = unansweredQuestions[0] - 1;
+                    const questionDivs = document.querySelectorAll(`#${level}-questions .question`);
+                    if (questionDivs[firstUnanswered]) {
+                        questionDivs[firstUnanswered].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Làm nổi bật câu hỏi chưa trả lời
+                        questionDivs[firstUnanswered].style.border = '3px solid #ff6b6b';
+                        questionDivs[firstUnanswered].style.backgroundColor = '#fff5f5';
+                        
+                        setTimeout(() => {
+                            questionDivs[firstUnanswered].style.border = '';
+                            questionDivs[firstUnanswered].style.backgroundColor = '';
+                        }, 3000);
+                    }
+                    
+                    return;
+                }
+            }
+            
+            // Đánh dấu đã nộp bài
+            examSubmitted[level] = true;
+            
+            let correctCount = 0;
+            
+            // Vô hiệu hóa tất cả các lựa chọn để không cho sửa đáp án
+            const allChoices = document.querySelectorAll(`#${level}-questions .choice`);
+            allChoices.forEach(choice => {
+                choice.style.pointerEvents = 'none';
+                choice.style.cursor = 'default';
+                choice.style.opacity = '0.8';
+            });
+            
+            // Check answers and highlight
+            questions.forEach((question, index) => {
+                const questionDivs = document.querySelectorAll(`#${level}-questions .question`);
+                if (!questionDivs[index]) return; // Kiểm tra tồn tại
+                
+                const questionDiv = questionDivs[index];
+                const choices = questionDiv.querySelectorAll('.choice');
+                const userAnswer = userAnswers[level] ? userAnswers[level][index] : -1;
+                
+                // Kiểm tra tồn tại của choices trước khi truy cập
+                if (choices.length > question.correct && choices[question.correct]) {
+                    // Highlight correct answer
+                    choices[question.correct].classList.add('correct');
+                }
+                
+                // Highlight incorrect answer if user selected wrong
+                if (userAnswer !== -1 && userAnswer !== question.correct && choices[userAnswer]) {
+                    choices[userAnswer].classList.add('incorrect');
+                } else if (userAnswer === -1) {
+                    // Highlight unanswered questions
+                    questionDiv.style.backgroundColor = '#fff3cd';
+                    questionDiv.style.border = '2px solid #ffc107';
+                }
+                
+                // Count correct answers
+                if (userAnswer === question.correct) {
+                    correctCount++;
+                }
+            });
+            
+            // Show result
+            showResult(level, correctCount, questions.length, unansweredQuestions.length);
+        }
+
+        function showResult(level, correct, total, unanswered = 0) {
+            const resultDiv = document.getElementById(level + '-result');
+            const percentage = Math.round((correct / total) * 100);
+            
+            let rating = '';
+            let emoji = '';
+            
+            if (percentage >= 90) {
+                rating = 'Xuất sắc';
+                emoji = '🌟';
+            } else if (percentage >= 75) {
+                rating = 'Giỏi';
+                emoji = '👍';
+            } else if (percentage >= 60) {
+                rating = 'Khá';
+                emoji = '😊';
+            } else if (percentage >= 40) {
+                rating = 'Trung bình';
+                emoji = '📚';
+            } else {
+                rating = 'Cần cố gắng thêm';
+                emoji = '💪';
+            }
+            
+            let resultHTML = `
+                <div class="score">${correct}/${total} điểm (${percentage}%)</div>
+                <div class="rating">${emoji} ${rating}</div>
+                <p>Bạn đã trả lời đúng ${correct} câu trong tổng số ${total} câu hỏi.</p>
+            `;
+            
+            if (unanswered > 0) {
+                resultHTML += `
+                    <p style="color: #856404; background: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                        ⚠️ Có ${unanswered} câu chưa trả lời (được tính là sai)
+                    </p>
+                `;
+            }
+            
+            resultHTML += `
+                <button class="nav-btn easy" onclick="showExam('${level}')" style="margin-top: 15px;">
+                    🔄 Tạo đề mới
+                </button>
+            `;
+            
+            resultDiv.innerHTML = resultHTML;
+            resultDiv.style.display = 'block';
+            
+            // Hide submit button
+            document.querySelector(`#${level}-exam .submit-btn`).style.display = 'none';
+            
+            // Scroll to result
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function goBack() {
+            // Show navigation
+            document.getElementById('nav-section').style.display = 'flex';
+            
+            // Hide all exam sections
+            document.querySelectorAll('.exam-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Reset all exams
+            ['easy', 'medium', 'hard'].forEach(level => {
+                // Reset exam submitted status
+                examSubmitted[level] = false;
+                
+                // Reset UI elements
+                document.getElementById(level + '-result').style.display = 'none';
+                const submitBtn = document.querySelector(`#${level}-exam .submit-btn`);
+                if (submitBtn) {
+                    submitBtn.style.display = 'inline-block';
+                }
+                
+                // Reset choice selections and enable them
+                document.querySelectorAll(`#${level}-questions .choice`).forEach(choice => {
+                    choice.classList.remove('selected', 'correct', 'incorrect');
+                    choice.style.pointerEvents = 'auto';
+                    choice.style.cursor = 'pointer';
+                    choice.style.opacity = '1';
+                });
+                
+                // Reset question backgrounds
+                document.querySelectorAll(`#${level}-questions .question`).forEach(question => {
+                    question.style.backgroundColor = '';
+                    question.style.border = '';
+                });
+            });
+            
+            // Reset user answers
+            userAnswers = {};
+        }
+    </script>
+</body>
+</html>
